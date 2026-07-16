@@ -1,32 +1,34 @@
 # AI News Bias Analyzer
 
-Production-style Applied AI project for analyzing political bias in online news, generating neutral summaries, and surfacing a more balanced reading feed.
+AI News Bias Analyzer is a full-stack applied AI project that retrieves current news articles, estimates political bias, generates neutral summaries, and surfaces analytics that help compare source balance across a feed.
 
-This repository is designed to showcase end-to-end AI engineering skills for internships, co-op roles, and entry-level data/ML positions.
+The project is designed to present well in a GitHub portfolio for internships, co-op roles, and entry-level data science, ML, and AI engineering positions. It combines retrieval, LLM inference, analytics, and a production-style web UI.
 
-## What This Project Does
+## What It Does
 
-- Retrieves recent articles from diverse news domains using Exa search.
-- Scores political bias on a 0-100 scale using an LLM-based analysis pipeline.
-- Generates neutral summaries to reduce emotionally loaded framing.
-- Exposes a clean API and displays results in a responsive React UI.
-- Computes diversity-oriented analytics such as bias spread and source mix.
+- Searches for recent articles using Exa semantic retrieval.
+- Processes each article with Claude-based bias analysis.
+- Generates neutral summaries to reduce editorial framing.
+- Applies source-aware fallback scoring when the primary analysis fails.
+- Tracks bias distribution, source mix, confidence, and recency for analytics.
+- Displays results in a React frontend with filtering, pagination, and article detail cards.
 
-## Why This Project Is Strong For Recruiting
+## Why It Is Recruiter-Friendly
 
-- Full-stack AI architecture: data retrieval, model inference, caching, API layer, frontend visualization.
-- Practical ML framing: measurable output (bias score, confidence, indicators).
-- Real-world engineering: fallback logic, rate limiting, error handling, and cost-aware caching.
-- Clear expansion path into advanced ML, recommender systems, and MLOps.
+- End-to-end architecture: retrieval, preprocessing, model inference, API layer, caching, and frontend presentation.
+- Clear ML outputs: bias score, label, confidence, reasoning, and key indicators.
+- Data analytics angle: ideological spread, bucket counts, source diversity, and content-level signals.
+- Production-minded engineering: rate limiting, security middleware, timeout handling, caching, and graceful fallbacks.
+- Strong discussion value in interviews because it shows both implementation and product thinking.
 
-## Current Architecture
+## System Architecture
 
 ```mermaid
 flowchart LR
   U[User] --> F[React Frontend]
   F -->|GET /api/news/search| B[Express Backend]
-  B --> E[Exa Search API]
-  B --> A[Anthropic Claude API]
+  B --> E[Exa Semantic Search]
+  B --> A[Anthropic Claude]
   B --> C[NodeCache]
   E --> B
   A --> B
@@ -36,59 +38,61 @@ flowchart LR
 
 ## Tech Stack
 
-- Frontend: React 18, Tailwind CSS, Framer Motion, Axios
+- Frontend: React 18, Tailwind CSS, Framer Motion, Axios, Lucide React, React Hot Toast
 - Backend: Node.js, Express, Helmet, CORS, express-rate-limit
-- AI/LLM: Anthropic Claude (bias analysis and neutral summarization)
+- AI / LLM: Anthropic Claude for bias analysis and neutral summarization
 - Retrieval: Exa neural search API
-- Performance: NodeCache (in-memory cache)
+- Caching: NodeCache in memory
 
-## Implemented AI/ML Algorithms (In Code)
+## Implemented Algorithms And AI Logic
 
-| Area | Algorithm / Method | Purpose | Status |
-| --- | --- | --- | --- |
-| Retrieval | Neural semantic search (Exa) | Find timely and relevant articles | Implemented |
-| Source balancing | Domain-bucket sampling | Pull from left/center/right-leaning source groups | Implemented |
-| Deduplication | URL-set deduping | Remove repeated articles | Implemented |
-| Bias scoring | Prompt-based LLM classification | Predict bias score 0-100 + label + confidence | Implemented |
-| Fallback 1 | Source-aware LLM assessment | Source reputation + article-level adjustment | Implemented |
-| Fallback 2 | Keyword-weighted heuristic scoring | Resilient scoring if LLM/API fails | Implemented |
-| Summarization | Neutral abstractive summarization | Create concise factual summaries | Implemented |
-| Analytics | Standard deviation diversity score | Quantify ideological spread in article set | Implemented |
+| Area | Algorithm / Method | What It Does |
+| --- | --- | --- |
+| Retrieval | Neural semantic search | Finds timely, query-relevant articles from the web |
+| Source selection | Domain bucket sampling | Pulls from left, center, and right-leaning source groups |
+| Deduplication | URL-based deduping | Removes duplicate search results |
+| Bias analysis | Prompt-based LLM classification | Produces a 0-100 bias score, label, confidence, and reasoning |
+| Fallback scoring | Source-aware analysis | Adjusts bias using source reputation and article content |
+| Backup scoring | Keyword-weighted heuristic model | Provides resilient output when LLM or API calls fail |
+| Summarization | Neutral abstractive summarization | Produces concise factual summaries with reduced framing bias |
+| Analytics | Diversity and spread scoring | Estimates ideological spread and source balance in the feed |
 
-## Data Analytics Outputs
+## Data Analytics Features
 
-The platform currently supports analyst-friendly signals:
+The project already supports analytics-style outputs that are useful in a portfolio or dashboard context:
 
-- Bias distribution: liberal / center / conservative bucket counts.
-- Confidence tracking: per-article confidence from AI inference.
-- Source diversity: mix of domains and ideological spread.
-- Diversity score: normalized variance proxy from article bias scores.
-- Time features: published timestamp and relative recency formatting.
+- Bias distribution across liberal, center, and conservative ranges.
+- Confidence scores for each AI prediction.
+- Source diversity across different domains and editorial perspectives.
+- Diversity score as a proxy for ideological spread.
+- Recency information through published timestamps and relative time formatting.
 
-These are useful for dashboarding and can be expanded into cohort-level analytics.
+This makes the project easier to position as both an AI product and a data analytics system.
 
-## API (Currently Available)
+## API
 
-- GET /health
-- GET /api/news/search?query=latest%20news&limit=10
+Currently implemented endpoint:
 
-Note: frontend service wrappers include additional endpoint placeholders for future expansion.
+- `GET /health`
+- `GET /api/news/search?query=latest%20news&limit=10`
+
+The frontend service layer also contains placeholders for future news, AI, and user-analytics endpoints.
 
 ## Local Setup
 
-### 1) Install dependencies
+### 1. Install dependencies
 
 ```bash
-cd backend
+cd news-platform/backend
 npm install
 
 cd ../frontend
 npm install
 ```
 
-### 2) Configure environment variables
+### 2. Configure environment variables
 
-Create backend/.env with:
+Create `news-platform/backend/.env` with:
 
 ```env
 PORT=5001
@@ -99,88 +103,95 @@ ANTHROPIC_API_KEY=your_key_here
 EXA_API_KEY=your_key_here
 ```
 
-### 3) Run the app
+### 3. Run the app
 
-Backend terminal:
+Backend:
 
 ```bash
-cd backend
+cd news-platform/backend
 npm run dev
 ```
 
-Frontend terminal:
+Frontend:
 
 ```bash
-cd frontend
+cd news-platform/frontend
 npm start
 ```
 
-### 4) Open
+Or use the helper script from inside the `news-platform` folder:
+
+```bash
+cd news-platform
+./start.sh
+```
+
+### 4. Open the app
 
 - Frontend: http://localhost:3000
 - Backend health: http://localhost:5001/health
 
-## Suggested Resume Bullet Points
+## Resume Bullet Ideas
 
-- Built an AI-powered news analysis platform using React and Node.js that scores political bias (0-100) and generates neutral summaries with LLM inference.
-- Designed a resilient inference pipeline with multi-stage fallbacks (LLM source modeling + heuristic backup), improving robustness under API failure conditions.
-- Engineered a domain-balanced retrieval strategy and diversity analytics to reduce source concentration and quantify ideological spread.
-- Implemented caching, rate limiting, and secure API middleware to optimize latency/cost and production readiness.
+- Built a full-stack AI news platform with React and Node.js that retrieves articles, scores political bias on a 0-100 scale, and generates neutral summaries.
+- Designed a resilient AI inference pipeline with LLM analysis, source-aware fallback logic, and keyword-based backup scoring to improve reliability under failure conditions.
+- Implemented data analytics features such as bias distribution, source diversity, recency tracking, and ideological spread measurement.
+- Added caching, security middleware, and rate limiting to support production-style behavior and reduce API cost.
 
-## Advanced AI/ML Roadmap (Recommended For Portfolio Impact)
+## High-Value Algorithms To Mention In Interviews
 
-The following are strong, high-value upgrades to discuss in interviews. They are not fully implemented yet.
+These are not all implemented in the current codebase, but they are strong upgrades to discuss or add next if you want the project to look more advanced.
 
-### A) Supervised Bias Classification
+### Supervised Bias Classification
 
-- Fine-tune DeBERTa-v3 or RoBERTa on labeled media-bias datasets.
-- Output calibrated probabilities (Platt scaling / isotonic regression).
-- Benefit: less prompt variance, more stable bias predictions.
+- Fine-tune DeBERTa-v3, RoBERTa, or DistilBERT on labeled media-bias datasets.
+- Add calibrated probabilities with Platt scaling or isotonic regression.
+- Why it helps: more stable predictions than prompt-only scoring.
 
-### B) Retrieval + Ranking Improvements
+### Hybrid Retrieval And Ranking
 
-- Hybrid retrieval: BM25 + dense vectors (Sentence Transformers).
-- Cross-encoder reranking for top-k relevance and factual alignment.
-- Benefit: better article quality and fewer noisy results.
+- Combine BM25 with dense retrieval using Sentence Transformers.
+- Add cross-encoder reranking for relevance and factual alignment.
+- Why it helps: better article quality and stronger search relevance.
 
-### C) Recommendation and Diversity Optimization
+### Recommendation And Diversity Optimization
 
-- Contextual bandits (LinUCB / Thompson Sampling) for personalized-yet-diverse feeds.
-- Multi-objective ranker for relevance, novelty, and ideological balance.
-- Benefit: stronger recommendation science and measurable engagement lift.
+- Use contextual bandits such as LinUCB or Thompson Sampling.
+- Optimize for relevance, novelty, and ideological diversity together.
+- Why it helps: stronger personalization without creating echo chambers.
 
-### D) Topic and Narrative Analytics
+### Topic And Narrative Analysis
 
-- BERTopic or LDA for topic discovery.
-- Stance detection model per topic (pro/neutral/contra).
-- Benefit: richer analytics for product dashboards and media intelligence.
+- Use BERTopic or LDA for topic discovery.
+- Add stance detection for pro / neutral / contra framing.
+- Why it helps: deeper analytics for newsroom and media-intelligence use cases.
 
-### E) MLOps and Trust
+### Trust, Monitoring, And MLOps
 
-- Drift detection with PSI / KL divergence on feature and label distributions.
-- Conformal prediction for uncertainty intervals on bias scores.
-- Human-in-the-loop review queue for low-confidence predictions.
-- Benefit: production-grade monitoring and trustworthy AI governance.
+- Add drift detection with PSI or KL divergence.
+- Use conformal prediction for uncertainty intervals.
+- Add a human review queue for low-confidence predictions.
+- Why it helps: shows production-grade AI thinking.
 
-## Future Prediction Use Cases You Can Add
+## Future Prediction Use Cases
 
-- Election-cycle narrative shift forecasting by outlet and topic.
-- Event impact prediction on ideology spread (before/after major events).
-- Early-warning signal for echo-chamber risk in user reading behavior.
-- Temporal trend prediction of bias intensity using sequence models.
+- Forecast narrative shifts around elections or major events.
+- Predict how ideological spread changes after breaking news.
+- Detect early warning signs of echo chambers in reading behavior.
+- Track how topic framing evolves over time with sequence models.
 
-## Limitations (Transparent and Honest)
+## Limitations
 
-- Current bias analysis is LLM/prompt-driven and may vary by phrasing.
-- No persistent database yet; analytics are session-level.
-- No benchmark report yet against a held-out labeled test set.
+- The current bias analysis is LLM/prompt-driven, so outputs can vary with article phrasing.
+- There is no persistent database yet, so analytics are mostly session-level.
+- There is no published benchmark set yet for measuring precision, recall, and F1.
 
-## Next Milestones
+## Next Improvements
 
-1. Add a labeled evaluation dataset and report precision/recall/F1 by bias class.
+1. Add a labeled evaluation dataset and report metrics by bias class.
 2. Store articles and predictions in PostgreSQL for longitudinal analytics.
-3. Ship a metrics dashboard (source mix, drift, confidence, latency, cost).
-4. Containerize with Docker and add CI for tests/lint/build checks.
+3. Build a dashboard for source mix, confidence, latency, and drift.
+4. Add Docker and CI checks for tests, linting, and build validation.
 
 ## License
 
